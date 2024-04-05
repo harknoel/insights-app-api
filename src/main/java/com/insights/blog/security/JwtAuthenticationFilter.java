@@ -1,4 +1,4 @@
-package com.insights.blog.config;
+package com.insights.blog.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
