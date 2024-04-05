@@ -29,6 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         token = authorizationHeader.substring(7);
-        email = jwtService.extractUser(token);
+        email = jwtService.extractUsername(token);
     }
 }
