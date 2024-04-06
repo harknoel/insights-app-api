@@ -8,7 +8,7 @@ import com.insights.blog.repository.TokenRepository;
 import com.insights.blog.repository.UserRepository;
 import com.insights.blog.security.AuthenticationRequest;
 import com.insights.blog.security.AuthenticationResponse;
-import com.insights.blog.security.RegisterRequest;
+import com.insights.blog.payload.RegisterRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +24,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequestDTO request) {
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
