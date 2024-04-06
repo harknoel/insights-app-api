@@ -1,4 +1,4 @@
-package com.insights.blog.security;
+package com.insights.blog.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
