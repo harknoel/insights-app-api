@@ -21,8 +21,9 @@ public class BlogController {
         this.blogService = blogService;
     }
 
-    @GetMapping
     public ResponseEntity<List<Blog>> getAllPosts() {
         return blogService.getAllPosts();
     }
+
+
 }
