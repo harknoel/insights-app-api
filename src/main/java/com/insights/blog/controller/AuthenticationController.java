@@ -1,5 +1,9 @@
-package com.insights.blog.security;
+package com.insights.blog.controller;
 
+import com.insights.blog.security.AuthenticationRequest;
+import com.insights.blog.security.AuthenticationResponse;
+import com.insights.blog.security.AuthenticationService;
+import com.insights.blog.security.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
