@@ -1,10 +1,12 @@
 package com.insights.blog.controller;
 
+import com.insights.blog.exception.UserAlreadyExistsException;
 import com.insights.blog.payload.LoginRequestDTO;
 import com.insights.blog.payload.AuthenticationResponseDTO;
 import com.insights.blog.payload.RegisterRequestDTO;
 import com.insights.blog.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +22,13 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
-        return ResponseEntity.ok(authenticationService.register(registerRequestDTO));
+        try {
+            return ResponseEntity.ok(authenticationService.register(registerRequestDTO));
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping("/authenticate")

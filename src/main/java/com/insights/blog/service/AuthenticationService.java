@@ -4,6 +4,7 @@ import com.insights.blog.entity.Role;
 import com.insights.blog.entity.Token;
 import com.insights.blog.entity.TokenType;
 import com.insights.blog.entity.User;
+import com.insights.blog.exception.UserAlreadyExistsException;
 import com.insights.blog.repository.TokenRepository;
 import com.insights.blog.repository.UserRepository;
 import com.insights.blog.payload.LoginRequestDTO;
@@ -26,7 +27,7 @@ public class AuthenticationService {
 
     public AuthenticationResponseDTO register(RegisterRequestDTO request) {
         if(userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return null;
+            throw new UserAlreadyExistsException("User already exists");
         }
         var user = User.builder()
                 .firstname(request.getFirstname())
