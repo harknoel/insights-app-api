@@ -1,4 +1,4 @@
-package com.insights.blog.security;
+package com.insights.blog.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class LoginRequestDTO {
 
     private String email;
     String password;
