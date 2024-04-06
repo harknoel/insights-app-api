@@ -2,7 +2,7 @@ package com.insights.blog.controller;
 
 import com.insights.blog.security.AuthenticationRequest;
 import com.insights.blog.security.AuthenticationResponse;
-import com.insights.blog.security.AuthenticationService;
+import com.insights.blog.service.AuthenticationService;
 import com.insights.blog.security.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

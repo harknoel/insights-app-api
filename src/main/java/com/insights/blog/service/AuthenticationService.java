@@ -1,8 +1,12 @@
-package com.insights.blog.security;
+package com.insights.blog.service;
 
 import com.insights.blog.entity.Role;
 import com.insights.blog.entity.User;
 import com.insights.blog.repository.UserRepository;
+import com.insights.blog.security.AuthenticationRequest;
+import com.insights.blog.security.AuthenticationResponse;
+import com.insights.blog.security.JwtService;
+import com.insights.blog.security.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
