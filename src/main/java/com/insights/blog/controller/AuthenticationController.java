@@ -25,8 +25,9 @@ public class AuthenticationController {
         try {
             return ResponseEntity.ok(authenticationService.register(registerRequestDTO));
         } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // Return 409 Conflict with empty body
         } catch (Exception e) {
+            // Handle other unexpected exceptions (log, return 500)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
