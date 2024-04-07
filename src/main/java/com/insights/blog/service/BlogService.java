@@ -43,6 +43,6 @@ public class BlogService {
                 .build();
         blogRepository.save(blog);
 
-        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate(), blog.getComments());
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
     }
 }
