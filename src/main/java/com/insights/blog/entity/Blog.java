@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "blog")
 public class Blog {
     @Id
     @GeneratedValue
