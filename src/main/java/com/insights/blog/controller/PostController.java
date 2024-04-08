@@ -1,8 +1,8 @@
 package com.insights.blog.controller;
 
 import com.insights.blog.entity.Blog;
-import com.insights.blog.payload.BlogRequestDTO;
-import com.insights.blog.payload.BlogResponseDTO;
+import com.insights.blog.payload.PostRequestDTO;
+import com.insights.blog.payload.PostResponseDTO;
 import com.insights.blog.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +26,14 @@ public class PostController {
 
     @PostMapping("/create/blog")
     @PreAuthorize("hasRole('USER')")
-    public BlogResponseDTO createBlog(@RequestBody BlogRequestDTO blogRequestDTO) {
-        return postService.addBlog(blogRequestDTO);
+    public PostResponseDTO createBlog(@RequestBody PostRequestDTO postRequestDTO) {
+        return postService.addBlog(postRequestDTO);
+    }
+
+    @DeleteMapping("/delete/blog/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deleteBlog(@PathVariable Integer id) {
+        boolean status = postService.deleteBlog(id);
+        return ResponseEntity.ok().build();
     }
 }
