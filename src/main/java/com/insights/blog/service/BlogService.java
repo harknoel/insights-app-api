@@ -29,7 +29,6 @@ public class BlogService {
     public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO) {
         Optional<User> requestUser = userRepository.findByEmail(blogRequestDTO.getEmail());
         if(requestUser.isEmpty()) {
-            System.out.println(blogRequestDTO.getEmail());
             // TO DO throw exception
             return null;
         }
@@ -40,9 +39,9 @@ public class BlogService {
                 .title(blogRequestDTO.getTitle())
                 .content(blogRequestDTO.getContent())
                 .user(user)
+                .date(blogRequestDTO.getDate())
                 .build();
         blogRepository.save(blog);
-
         return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
     }
 }
