@@ -4,7 +4,7 @@ import com.insights.blog.entity.Blog;
 import com.insights.blog.entity.User;
 import com.insights.blog.payload.BlogRequestDTO;
 import com.insights.blog.payload.BlogResponseDTO;
-import com.insights.blog.repository.BlogRepository;
+import com.insights.blog.repository.PostRepository;
 import com.insights.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BlogService {
+public class PostService {
 
-    private final BlogRepository blogRepository;
+    private final PostRepository postRepository;
 
     private final UserRepository userRepository;
 
     public ResponseEntity<List<Blog>> getAllPosts() {
-        return new ResponseEntity<>(blogRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }
 
     public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO) {
@@ -41,7 +41,7 @@ public class BlogService {
                 .user(user)
                 .date(blogRequestDTO.getDate())
                 .build();
-        blogRepository.save(blog);
+        postRepository.save(blog);
         return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
     }
 }
