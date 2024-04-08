@@ -24,7 +24,7 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-    @GetMapping("/create/blog")
+    @PostMapping("/create/blog")
     @PreAuthorize("hasRole('USER')")
     public BlogResponseDTO createBlog(@RequestBody BlogRequestDTO blogRequestDTO) {
         return postService.addBlog(blogRequestDTO);
