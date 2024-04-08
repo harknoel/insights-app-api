@@ -2,6 +2,8 @@ package com.insights.blog.service;
 
 import com.insights.blog.entity.Blog;
 import com.insights.blog.entity.User;
+import com.insights.blog.exception.BlogNotFoundException;
+import com.insights.blog.exception.UnauthorizedActionException;
 import com.insights.blog.payload.PostRequestDTO;
 import com.insights.blog.payload.PostResponseDTO;
 import com.insights.blog.repository.PostRepository;
@@ -38,7 +40,26 @@ public class PostService {
         return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
     }
 
-    public boolean deleteBlog(Integer id) {
-        return false;
+    public void deleteBlog(Integer id, User currentUser) {
+        try {
+            Optional<Blog> optionalBlog = postRepository.findById(id);
+
+            if (optionalBlog.isEmpty()) {
+                throw new BlogNotFoundException(id);
+            }
+
+            Blog blog = optionalBlog.get();
+
+            int blogUserId = blog.getUser().getUserId();
+            int currentUserId = currentUser.getUserId();
+
+            if (blogUserId == currentUserId) {
+                postRepository.deleteById(id);
+            } else {
+                throw new UnauthorizedActionException("You are not authorized to delete this blog");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete blog", e);
+        }
     }
 }
