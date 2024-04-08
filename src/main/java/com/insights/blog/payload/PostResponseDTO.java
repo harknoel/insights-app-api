@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,14 +20,14 @@ public class PostResponseDTO {
 
     private String content;
 
-    private String date;
+    private LocalDateTime createdAt;
 
-    private List<Comment> comments;
+    private LocalDateTime updatedAt;
 
-    public PostResponseDTO(Integer blogId, String title, String content, String date) {
+    public PostResponseDTO(Integer blogId, String title, String content, LocalDateTime createdAt) {
         this.blogId = blogId;
         this.title = title;
         this.content = content;
-        this.date = date;
+        this.createdAt = createdAt;
     }
 }
