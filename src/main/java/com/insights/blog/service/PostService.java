@@ -62,4 +62,38 @@ public class PostService {
             throw new RuntimeException("Failed to delete blog", e);
         }
     }
+
+    public PostResponseDTO updateBlog(Integer id, PostRequestDTO postRequestDTO, User currentUser) {
+        try {
+            Optional<Blog> optionalBlog = postRepository.findById(id);
+
+            if (optionalBlog.isEmpty()) {
+                throw new BlogNotFoundException(id);
+            }
+
+            Blog blog = optionalBlog.get();
+
+            int blogUserId = blog.getUser().getUserId();
+            int currentUserId = currentUser.getUserId();
+
+            if (blogUserId == currentUserId) {
+
+                if (postRequestDTO.getTitle() != null) {
+                    blog.setTitle(postRequestDTO.getTitle());
+                }
+
+                if (postRequestDTO.getContent() != null) {
+                    blog.setContent(postRequestDTO.getContent());
+                }
+
+                postRepository.save(blog);
+
+                return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
+            } else {
+                throw new UnauthorizedActionException("You are not authorized to delete this blog");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete blog", e);
+        }
+    }
 }

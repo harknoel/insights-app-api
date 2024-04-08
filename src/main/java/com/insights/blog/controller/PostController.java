@@ -38,4 +38,10 @@ public class PostController {
         postService.deleteBlog(id, currentUser);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/update/blog/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public PostResponseDTO updateBlog(@PathVariable Integer id, @RequestBody PostRequestDTO postRequestDTO, @CurrentUser User currentUser) {
+        return postService.updateBlog(id, postRequestDTO, currentUser);
+    }
 }

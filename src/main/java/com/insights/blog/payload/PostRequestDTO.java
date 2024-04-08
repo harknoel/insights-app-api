@@ -6,9 +6,6 @@ import lombok.Data;
 @Data
 public class PostRequestDTO {
     @NotBlank
-    private String email;
-
-    @NotBlank
     private String title;
 
     @NotBlank
