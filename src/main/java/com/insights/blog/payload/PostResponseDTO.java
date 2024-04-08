@@ -1,6 +1,6 @@
 package com.insights.blog.payload;
 
-import com.insights.blog.entity.Comment;
+import com.insights.blog.model.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

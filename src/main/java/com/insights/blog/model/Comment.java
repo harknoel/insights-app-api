@@ -1,4 +1,4 @@
-package com.insights.blog.entity;
+package com.insights.blog.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,30 +6,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "blog")
-public class Blog {
+public class Comment {
     @Id
     @GeneratedValue
-    private Integer blogId;
+    private Integer commentId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "blog")
-    List<Comment> comments;
+    @ManyToOne
+    @JoinColumn(name = "blog_id")
+    private Blog blog;
 
-    private String title;
-
-    private String content;
-
-    private String date;
-
+    String comment;
 }

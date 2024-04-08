@@ -1,6 +1,6 @@
 package com.insights.blog.repository;
 
-import com.insights.blog.entity.User;
+import com.insights.blog.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package com.insights.blog.controller;
 
-import com.insights.blog.entity.Blog;
-import com.insights.blog.entity.User;
+import com.insights.blog.model.Blog;
+import com.insights.blog.model.User;
 import com.insights.blog.payload.PostRequestDTO;
 import com.insights.blog.payload.PostResponseDTO;
 import com.insights.blog.security.CurrentUser;

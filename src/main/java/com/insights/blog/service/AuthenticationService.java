@@ -1,9 +1,9 @@
 package com.insights.blog.service;
 
-import com.insights.blog.entity.Role;
-import com.insights.blog.entity.Token;
-import com.insights.blog.entity.TokenType;
-import com.insights.blog.entity.User;
+import com.insights.blog.model.Role;
+import com.insights.blog.model.Token;
+import com.insights.blog.model.TokenType;
+import com.insights.blog.model.User;
 import com.insights.blog.exception.UserAlreadyExistsException;
 import com.insights.blog.repository.TokenRepository;
 import com.insights.blog.repository.UserRepository;

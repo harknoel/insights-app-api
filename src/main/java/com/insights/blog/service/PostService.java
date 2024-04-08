@@ -1,7 +1,7 @@
 package com.insights.blog.service;
 
-import com.insights.blog.entity.Blog;
-import com.insights.blog.entity.User;
+import com.insights.blog.model.Blog;
+import com.insights.blog.model.User;
 import com.insights.blog.exception.BlogNotFoundException;
 import com.insights.blog.exception.UnauthorizedActionException;
 import com.insights.blog.payload.PostRequestDTO;

@@ -1,4 +1,4 @@
-package com.insights.blog.entity;
+package com.insights.blog.model;
 
 public enum Role {
     ROLE_USER, ROLE_ADMIN

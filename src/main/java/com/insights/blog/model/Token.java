@@ -1,4 +1,4 @@
-package com.insights.blog.entity;
+package com.insights.blog.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,18 +11,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Comment {
+public class Token {
     @Id
     @GeneratedValue
-    private Integer commentId;
+    private Integer id;
+
+    private String token;
+
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
+
+    private boolean expired;
+
+    private boolean revoked;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "blog_id")
-    private Blog blog;
-
-    String comment;
 }

@@ -1,6 +1,6 @@
 package com.insights.blog.repository;
 
-import com.insights.blog.entity.Token;
+import com.insights.blog.model.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
