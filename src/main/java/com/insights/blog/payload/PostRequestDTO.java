@@ -1,11 +1,10 @@
 package com.insights.blog.payload;
 
-import com.insights.blog.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class BlogRequestDTO {
+public class PostRequestDTO {
     @NotBlank
     private String email;
 
