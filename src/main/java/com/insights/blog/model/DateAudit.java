@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Data
 @Builder
@@ -15,12 +18,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "date")
-public class Date {
+public class DateAudit {
     @Id
     @GeneratedValue
     private Integer id;
 
-    private String createdAt;
+    @DateTimeFormat(pattern = "YYYY-MM-DD")
+    private Date createdAt;
 
-    private String updatedAt;
+    @DateTimeFormat(pattern = "YYYY-MM-DD")
+    private Date updatedAt;
 }
