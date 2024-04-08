@@ -2,8 +2,8 @@ package com.insights.blog.service;
 
 import com.insights.blog.entity.Blog;
 import com.insights.blog.entity.User;
-import com.insights.blog.payload.BlogRequestDTO;
-import com.insights.blog.payload.BlogResponseDTO;
+import com.insights.blog.payload.PostRequestDTO;
+import com.insights.blog.payload.PostResponseDTO;
 import com.insights.blog.repository.PostRepository;
 import com.insights.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,22 +26,19 @@ public class PostService {
         return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }
 
-    public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO) {
-        Optional<User> requestUser = userRepository.findByEmail(blogRequestDTO.getEmail());
-        if(requestUser.isEmpty()) {
-            // TO DO throw exception
-            return null;
-        }
-
-        User user = requestUser.get();
+    public PostResponseDTO addBlog(PostRequestDTO postRequestDTO, User currentUser) {
         var blog = Blog
                 .builder()
-                .title(blogRequestDTO.getTitle())
-                .content(blogRequestDTO.getContent())
-                .user(user)
-                .date(blogRequestDTO.getDate())
+                .title(postRequestDTO.getTitle())
+                .content(postRequestDTO.getContent())
+                .user(currentUser)
+                .date(postRequestDTO.getDate())
                 .build();
         postRepository.save(blog);
-        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
+        return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
+    }
+
+    public boolean deleteBlog(Integer id) {
+        return false;
     }
 }
