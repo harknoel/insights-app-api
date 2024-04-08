@@ -34,10 +34,10 @@ public class PostService {
                 .title(postRequestDTO.getTitle())
                 .content(postRequestDTO.getContent())
                 .user(currentUser)
-                .date(postRequestDTO.getDate())
                 .build();
         postRepository.save(blog);
-        return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
+        System.out.println(blog.getUpdatedAt());
+        return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt());
     }
 
     public void deleteBlog(Integer id, User currentUser) {
@@ -77,18 +77,16 @@ public class PostService {
             int currentUserId = currentUser.getUserId();
 
             if (blogUserId == currentUserId) {
-
                 if (postRequestDTO.getTitle() != null) {
                     blog.setTitle(postRequestDTO.getTitle());
                 }
-
                 if (postRequestDTO.getContent() != null) {
                     blog.setContent(postRequestDTO.getContent());
                 }
 
                 postRepository.save(blog);
 
-                return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getDate());
+                return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt());
             } else {
                 throw new UnauthorizedActionException("You are not authorized to delete this blog");
             }
