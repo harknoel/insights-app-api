@@ -37,6 +37,17 @@ public class AuthenticationController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
+        try{
+            return ResponseEntity.ok(authenticationService.authenticate(loginRequestDTO));
+
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponseDTO> authenticateRequest(@RequestBody LoginRequestDTO loginRequestDTO) {
         return ResponseEntity.ok(authenticationService.authenticate(loginRequestDTO));
