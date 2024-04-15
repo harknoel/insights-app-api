@@ -1,11 +1,9 @@
 package com.insights.blog.controller;
 
-import com.insights.blog.model.Comment;
 import com.insights.blog.model.User;
 import com.insights.blog.payload.CommentRequestDTO;
 import com.insights.blog.security.CurrentUser;
 import com.insights.blog.service.CommentService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
