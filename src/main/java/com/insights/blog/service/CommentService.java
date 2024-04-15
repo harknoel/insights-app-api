@@ -20,7 +20,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    public Comment addComment(Integer blogId, String content, User currentUser) {
+    public void addComment(Integer blogId, String content, User currentUser) {
         Optional<Blog> optionalBlog = postRepository.findById(blogId);
 
         // Check if the blog exists
@@ -33,7 +33,6 @@ public class CommentService {
                     .comment(content)
                     .build();
             commentRepository.save(comment);
-            return comment;
         } else {
             throw new BlogNotFoundException(blogId);
         }
@@ -72,6 +71,44 @@ public class CommentService {
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete comment", e);
+        }
+    }
+
+    public void updateComment(Integer blogId, Integer commentId, String content, User currentUser) {
+        try {
+            // Check if the blog exists
+            Optional<Blog> optionalBlog = postRepository.findById(blogId);
+            if (optionalBlog.isEmpty()) {
+                throw new BlogNotFoundException(blogId);
+            }
+
+            Blog blog = optionalBlog.get();
+            // Check if the comment exists in the blog
+            Optional<Comment> optionalComment = commentRepository.findById(commentId);
+            if (optionalComment.isEmpty()) {
+                throw new CommentNotFoundException(commentId);
+            }
+
+            Comment comment = optionalComment.get();
+
+            // Check if the comment belongs to the specified blog
+            if (!comment.getBlog().getBlogId().equals(blogId)) {
+                throw new IllegalArgumentException("Comment with ID " + commentId + " does not belong to blog with ID " + blogId);
+            }
+
+            // Check if the user is authorized to update the comment
+            int commentUserId = comment.getUser().getUserId();
+            int currentUserId = currentUser.getUserId();
+
+            if (commentUserId == currentUserId) {
+                // Update the content of the comment
+                comment.setComment(content);
+                commentRepository.save(comment);
+            } else {
+                throw new UnauthorizedActionException("You are not authorized to update this comment");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update comment", e);
         }
     }
 
