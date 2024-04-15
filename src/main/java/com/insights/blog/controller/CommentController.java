@@ -26,11 +26,17 @@ public class CommentController {
         return ResponseEntity.ok().build();
     }
 
-
     @DeleteMapping("/delete/comment/{commentId}/{blogId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteComment(@PathVariable Integer blogId, @PathVariable Integer commentId, @CurrentUser User currentUser) {
         commentService.deleteComment(blogId, commentId, currentUser);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update/comment/{commentId}/{blogId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> updateComment(@PathVariable Integer blogId, @RequestBody CommentRequestDTO commentRequestDTO, @PathVariable Integer commentId, @CurrentUser User currentUser) {
+        commentService.updateComment(blogId, commentId, commentRequestDTO.getComment(), currentUser);
         return ResponseEntity.ok().build();
     }
 }
