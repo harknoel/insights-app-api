@@ -22,8 +22,6 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    private final UserRepository userRepository;
-
     public ResponseEntity<List<Blog>> getAllPosts() {
         return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }
@@ -36,7 +34,6 @@ public class PostService {
                 .user(currentUser)
                 .build();
         postRepository.save(blog);
-        System.out.println(blog.getUpdatedAt());
         return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt());
     }
 
