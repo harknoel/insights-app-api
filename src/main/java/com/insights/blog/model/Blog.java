@@ -1,5 +1,7 @@
 package com.insights.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +32,7 @@ public class Blog {
     private User user;
 
     @OneToMany(mappedBy = "blog")
+    @JsonBackReference
     List<Comment> comments;
 
     private String title;

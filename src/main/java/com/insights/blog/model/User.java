@@ -1,5 +1,7 @@
 package com.insights.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,15 +35,19 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @JsonManagedReference
     private Role role;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Token> tokens;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Blog> blogs;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Comment> comments;
 
     @Override
