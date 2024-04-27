@@ -1,5 +1,10 @@
 package com.insights.blog.exception;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class CommentNotFoundException extends RuntimeException {
 
     private final int commentId;
@@ -9,8 +14,5 @@ public class CommentNotFoundException extends RuntimeException {
         this.commentId = commentId;
     }
 
-    public int getCommentId() {
-        return commentId;
-    }
 }
 
