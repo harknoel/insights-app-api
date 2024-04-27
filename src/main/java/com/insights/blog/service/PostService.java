@@ -26,13 +26,28 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public Page<Blog> getAllPosts(int page) {
+    public Page<PostResponseDTO> getAllPosts(int page) {
         // Define pagination parameters
         int pageSize = 5; // Number of posts per page
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        // Retrieve the page of posts from the repository
-        return postRepository.findAll(pageable);
+        Page<Blog> blogPage = postRepository.findAll(pageable);
+
+        // Map Blog objects to PostResponseDTO objects
+        return blogPage.map(this::buildPostResponseDTO);
+    }
+
+    private PostResponseDTO buildPostResponseDTO(Blog blog) {
+        UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
+
+        return PostResponseDTO.builder()
+                .blogId(blog.getBlogId())
+                .title(blog.getTitle())
+                .content(blog.getContent())
+                .createdAt(blog.getCreatedAt())
+                .updatedAt(blog.getUpdatedAt())
+                .user(user)
+                .build();
     }
 
     public PostResponseDTO addBlog(PostRequestDTO postRequestDTO, User currentUser) {

@@ -23,10 +23,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("all/{page}")
-    public ResponseEntity<List<Blog>> getAllPosts(@PathVariable int page) {
-        Page<Blog> postPage = postService.getAllPosts(page);
-        List<Blog> posts = postPage.getContent();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+    public ResponseEntity<Page<PostResponseDTO>> getAllPosts(@PathVariable int page) {
+        Page<PostResponseDTO> postPage = postService.getAllPosts(page);
+        return new ResponseEntity<>(postPage, HttpStatus.OK);
     }
 
     @PostMapping("/create/blog")
