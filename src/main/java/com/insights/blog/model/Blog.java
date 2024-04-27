@@ -29,11 +29,16 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User user;
 
     @OneToMany(mappedBy = "blog")
     @JsonBackReference
     List<Comment> comments;
+
+    @OneToMany(mappedBy = "blog")
+    @JsonBackReference
+    List<Like> likes;
 
     private String title;
 
