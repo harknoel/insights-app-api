@@ -4,43 +4,39 @@ import com.insights.blog.model.Blog;
 import com.insights.blog.model.User;
 import com.insights.blog.exception.BlogNotFoundException;
 import com.insights.blog.exception.UnauthorizedActionException;
-import com.insights.blog.payload.PostRequestDTO;
-import com.insights.blog.payload.PostResponseDTO;
+import com.insights.blog.payload.BlogRequestDTO;
+import com.insights.blog.payload.BlogResponseDTO;
 import com.insights.blog.payload.UserDTO;
-import com.insights.blog.repository.PostRepository;
-import com.insights.blog.repository.UserRepository;
+import com.insights.blog.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class BlogService {
 
-    private final PostRepository postRepository;
+    private final BlogRepository blogRepository;
 
-    public Page<PostResponseDTO> getAllPosts(int page) {
+    public Page<BlogResponseDTO> getAllPosts(int page) {
         // Define pagination parameters
         int pageSize = 5; // Number of posts per page
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Blog> blogPage = postRepository.findAll(pageable);
+        Page<Blog> blogPage = blogRepository.findAll(pageable);
 
         // Map Blog objects to PostResponseDTO objects
         return blogPage.map(this::buildPostResponseDTO);
     }
 
-    private PostResponseDTO buildPostResponseDTO(Blog blog) {
+    private BlogResponseDTO buildPostResponseDTO(Blog blog) {
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
 
-        return PostResponseDTO.builder()
+        return BlogResponseDTO.builder()
                 .blogId(blog.getBlogId())
                 .title(blog.getTitle())
                 .content(blog.getContent())
@@ -50,21 +46,21 @@ public class PostService {
                 .build();
     }
 
-    public PostResponseDTO addBlog(PostRequestDTO postRequestDTO, User currentUser) {
+    public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO, User currentUser) {
         var blog = Blog
                 .builder()
-                .title(postRequestDTO.getTitle())
-                .content(postRequestDTO.getContent())
+                .title(blogRequestDTO.getTitle())
+                .content(blogRequestDTO.getContent())
                 .user(currentUser)
                 .build();
-        postRepository.save(blog);
+        blogRepository.save(blog);
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-        return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 
     public boolean deleteBlog(Integer id, User currentUser) {
         try {
-            Optional<Blog> optionalBlog = postRepository.findById(id);
+            Optional<Blog> optionalBlog = blogRepository.findById(id);
 
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(id);
@@ -76,7 +72,7 @@ public class PostService {
             int currentUserId = currentUser.getUserId();
 
             if (blogUserId == currentUserId) {
-                postRepository.deleteById(id);
+                blogRepository.deleteById(id);
                 return true;
             } else {
                 throw new UnauthorizedActionException("You are not authorized to delete this blog");
@@ -86,9 +82,9 @@ public class PostService {
         }
     }
 
-    public PostResponseDTO updateBlog(Integer id, PostRequestDTO postRequestDTO, User currentUser) {
+    public BlogResponseDTO updateBlog(Integer id, BlogRequestDTO blogRequestDTO, User currentUser) {
         try {
-            Optional<Blog> optionalBlog = postRepository.findById(id);
+            Optional<Blog> optionalBlog = blogRepository.findById(id);
 
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(id);
@@ -100,17 +96,17 @@ public class PostService {
             int currentUserId = currentUser.getUserId();
 
             if (blogUserId == currentUserId) {
-                if (postRequestDTO.getTitle() != null) {
-                    blog.setTitle(postRequestDTO.getTitle());
+                if (blogRequestDTO.getTitle() != null) {
+                    blog.setTitle(blogRequestDTO.getTitle());
                 }
-                if (postRequestDTO.getContent() != null) {
-                    blog.setContent(postRequestDTO.getContent());
+                if (blogRequestDTO.getContent() != null) {
+                    blog.setContent(blogRequestDTO.getContent());
                 }
 
-                postRepository.save(blog);
+                blogRepository.save(blog);
 
                 UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-                return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+                return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
             } else {
                 throw new UnauthorizedActionException("You are not authorized to delete this blog");
             }

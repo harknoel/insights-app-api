@@ -7,7 +7,7 @@ import com.insights.blog.model.Blog;
 import com.insights.blog.model.Comment;
 import com.insights.blog.model.User;
 import com.insights.blog.repository.CommentRepository;
-import com.insights.blog.repository.PostRepository;
+import com.insights.blog.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +18,10 @@ import java.util.Optional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final BlogRepository blogRepository;
 
     public void addComment(Integer blogId, String content, User currentUser) {
-        Optional<Blog> optionalBlog = postRepository.findById(blogId);
+        Optional<Blog> optionalBlog = blogRepository.findById(blogId);
 
         // Check if the blog exists
         if (optionalBlog.isPresent()) {
@@ -41,7 +41,7 @@ public class CommentService {
     public void deleteComment(Integer blogId, Integer commentId, User currentUser) {
         try {
             // Check if the blog exists
-            Optional<Blog> optionalBlog = postRepository.findById(blogId);
+            Optional<Blog> optionalBlog = blogRepository.findById(blogId);
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(blogId);
             }
@@ -77,7 +77,7 @@ public class CommentService {
     public void updateComment(Integer blogId, Integer commentId, String content, User currentUser) {
         try {
             // Check if the blog exists
-            Optional<Blog> optionalBlog = postRepository.findById(blogId);
+            Optional<Blog> optionalBlog = blogRepository.findById(blogId);
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(blogId);
             }

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class PostRequestDTO {
+public class BlogRequestDTO {
     @NotBlank
     private String title;
 
