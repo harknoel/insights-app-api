@@ -22,8 +22,9 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("all/{page}")
-    public ResponseEntity<Page<PostResponseDTO>> getAllPosts(@PathVariable int page) {
+    @GetMapping("/all")
+    public ResponseEntity<Page<PostResponseDTO>> getAllPosts(@RequestParam int page) {
+        System.out.println(page);
         Page<PostResponseDTO> postPage = postService.getAllPosts(page);
         return new ResponseEntity<>(postPage, HttpStatus.OK);
     }
