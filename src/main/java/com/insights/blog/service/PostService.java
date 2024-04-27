@@ -47,7 +47,7 @@ public class PostService {
         return new PostResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 
-    public void deleteBlog(Integer id, User currentUser) {
+    public boolean deleteBlog(Integer id, User currentUser) {
         try {
             Optional<Blog> optionalBlog = postRepository.findById(id);
 
@@ -62,11 +62,12 @@ public class PostService {
 
             if (blogUserId == currentUserId) {
                 postRepository.deleteById(id);
+                return true;
             } else {
                 throw new UnauthorizedActionException("You are not authorized to delete this blog");
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to delete blog", e);
+            return false;
         }
     }
 

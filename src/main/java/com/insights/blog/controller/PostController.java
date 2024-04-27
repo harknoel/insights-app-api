@@ -37,9 +37,8 @@ public class PostController {
 
     @DeleteMapping("/delete/blog/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> deleteBlog(@PathVariable Integer id, @CurrentUser User currentUser) {
-        postService.deleteBlog(id, currentUser);
-        return ResponseEntity.ok().build();
+    public boolean deleteBlog(@PathVariable Integer id, @CurrentUser User currentUser) {
+        return postService.deleteBlog(id, currentUser);
     }
 
     @PutMapping("/update/blog/{id}")
