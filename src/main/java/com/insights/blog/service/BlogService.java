@@ -39,6 +39,7 @@ public class BlogService {
         return BlogResponseDTO.builder()
                 .blogId(blog.getBlogId())
                 .title(blog.getTitle())
+                .likes(blog.getLikes().size())
                 .content(blog.getContent())
                 .createdAt(blog.getCreatedAt())
                 .updatedAt(blog.getUpdatedAt())
@@ -55,7 +56,7 @@ public class BlogService {
                 .build();
         blogRepository.save(blog);
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 
     public boolean deleteBlog(Integer id, User currentUser) {
@@ -106,7 +107,7 @@ public class BlogService {
                 blogRepository.save(blog);
 
                 UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-                return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+                return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
             } else {
                 throw new UnauthorizedActionException("You are not authorized to delete this blog");
             }

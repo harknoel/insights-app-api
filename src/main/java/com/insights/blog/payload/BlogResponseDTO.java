@@ -16,6 +16,8 @@ public class BlogResponseDTO {
 
     private String title;
 
+    private Integer likes;
+
     private String content;
 
     private LocalDateTime createdAt;
