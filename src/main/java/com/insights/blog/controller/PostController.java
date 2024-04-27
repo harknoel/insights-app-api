@@ -7,6 +7,8 @@ import com.insights.blog.payload.PostResponseDTO;
 import com.insights.blog.security.CurrentUser;
 import com.insights.blog.service.PostService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,11 @@ public class PostController {
 
     private final PostService postService;
 
-    public ResponseEntity<List<Blog>> getAllPosts() {
-        return postService.getAllPosts();
+    @GetMapping("all/{page}")
+    public ResponseEntity<List<Blog>> getAllPosts(@PathVariable int page) {
+        Page<Blog> postPage = postService.getAllPosts(page);
+        List<Blog> posts = postPage.getContent();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @PostMapping("/create/blog")
