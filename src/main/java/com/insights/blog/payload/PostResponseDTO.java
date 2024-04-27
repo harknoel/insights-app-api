@@ -24,10 +24,5 @@ public class PostResponseDTO {
 
     private LocalDateTime updatedAt;
 
-    public PostResponseDTO(Integer blogId, String title, String content, LocalDateTime createdAt) {
-        this.blogId = blogId;
-        this.title = title;
-        this.content = content;
-        this.createdAt = createdAt;
-    }
+    private UserDTO user;
 }
