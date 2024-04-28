@@ -19,5 +19,5 @@ public class CommentResponseDTO {
 
     private LocalDateTime updatedAt;
 
-    private UserDTO user;
+    private UserWithEmailDTO user;
 }

@@ -9,6 +9,7 @@ import com.insights.blog.model.User;
 import com.insights.blog.payload.BlogResponseDTO;
 import com.insights.blog.payload.CommentResponseDTO;
 import com.insights.blog.payload.UserDTO;
+import com.insights.blog.payload.UserWithEmailDTO;
 import com.insights.blog.repository.CommentRepository;
 import com.insights.blog.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
@@ -134,7 +135,7 @@ public class CommentService {
     }
 
     private CommentResponseDTO buildCommentResponseDTO(Comment comment) {
-        UserDTO user = new UserDTO(comment.getUser().getUserId(), comment.getUser().getFirstname(), comment.getUser().getLastname());
+        UserWithEmailDTO user = new UserWithEmailDTO(comment.getUser().getUserId(), comment.getUser().getFirstname(), comment.getUser().getLastname(), comment.getUser().getEmail());
 
         return CommentResponseDTO.builder()
                 .comment(comment.getComment())
