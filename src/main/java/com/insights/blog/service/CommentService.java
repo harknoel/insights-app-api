@@ -6,11 +6,16 @@ import com.insights.blog.exception.UnauthorizedActionException;
 import com.insights.blog.model.Blog;
 import com.insights.blog.model.Comment;
 import com.insights.blog.model.User;
+import com.insights.blog.payload.BlogResponseDTO;
+import com.insights.blog.payload.CommentResponseDTO;
+import com.insights.blog.payload.UserDTO;
 import com.insights.blog.repository.CommentRepository;
 import com.insights.blog.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -112,4 +117,30 @@ public class CommentService {
         }
     }
 
+    public List<CommentResponseDTO> getCommentsById(Integer blogId) {
+        Optional<Blog> optionalBlog = blogRepository.findById(blogId);
+        if(optionalBlog.isEmpty()) {
+            throw new BlogNotFoundException(blogId);
+        }
+
+        Blog blog = optionalBlog.get();
+
+        // Process comments and convert them to CommentResponseDTO objects
+        List<CommentResponseDTO> commentDtos = new ArrayList<>();
+        for (Comment comment : blog.getComments()) {
+            commentDtos.add(buildCommentResponseDTO(comment)); // Pass the comment object
+        }
+        return commentDtos;
+    }
+
+    private CommentResponseDTO buildCommentResponseDTO(Comment comment) {
+        UserDTO user = new UserDTO(comment.getUser().getUserId(), comment.getUser().getFirstname(), comment.getUser().getLastname());
+
+        return CommentResponseDTO.builder()
+                .comment(comment.getComment())
+                .createdAt(comment.getCreatedAt())
+                .updatedAt(comment.getUpdatedAt())
+                .user(user)
+                .build();
+    }
 }
