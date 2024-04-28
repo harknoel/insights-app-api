@@ -27,7 +27,7 @@ public class BlogService {
         int pageSize = 5; // Number of posts per page
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        if(query.equals("")) {
+        if(query.isEmpty()) {
             Page<Blog> blogPage = blogRepository.findAll(pageable);
 
             // Map Blog objects to PostResponseDTO objects
