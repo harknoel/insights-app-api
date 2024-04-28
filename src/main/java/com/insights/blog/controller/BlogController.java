@@ -20,9 +20,9 @@ public class BlogController {
     private final BlogService blogService;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<BlogResponseDTO>> getAllPosts(@RequestParam int page) {
+    public ResponseEntity<Page<BlogResponseDTO>> getAllPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String query) {
         System.out.println(page);
-        Page<BlogResponseDTO> postPage = blogService.getAllPosts(page);
+        Page<BlogResponseDTO> postPage = blogService.getAllPosts(page, query);
         return new ResponseEntity<>(postPage, HttpStatus.OK);
     }
 

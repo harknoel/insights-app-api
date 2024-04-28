@@ -22,16 +22,23 @@ public class BlogService {
 
     private final BlogRepository blogRepository;
 
-    public Page<BlogResponseDTO> getAllPosts(int page) {
+    public Page<BlogResponseDTO> getAllPosts(int page, String query) {
         // Define pagination parameters
         int pageSize = 5; // Number of posts per page
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Blog> blogPage = blogRepository.findAll(pageable);
+        if(query.equals("")) {
+            Page<Blog> blogPage = blogRepository.findAll(pageable);
+
+            // Map Blog objects to PostResponseDTO objects
+            return blogPage.map(this::buildPostResponseDTO);
+        }
+        Page<Blog> blogPage = blogRepository.findBlogsByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(query, query, pageable);
 
         // Map Blog objects to PostResponseDTO objects
         return blogPage.map(this::buildPostResponseDTO);
     }
+
 
     private BlogResponseDTO buildPostResponseDTO(Blog blog) {
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
