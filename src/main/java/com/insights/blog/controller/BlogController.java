@@ -1,5 +1,6 @@
 package com.insights.blog.controller;
 
+import com.insights.blog.model.Blog;
 import com.insights.blog.model.User;
 import com.insights.blog.payload.BlogRequestDTO;
 import com.insights.blog.payload.BlogResponseDTO;
@@ -21,9 +22,14 @@ public class BlogController {
 
     @GetMapping("/all")
     public ResponseEntity<Page<BlogResponseDTO>> getAllPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String query) {
-        System.out.println(page);
         Page<BlogResponseDTO> postPage = blogService.getAllPosts(page, query);
         return new ResponseEntity<>(postPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/get/blog/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BlogResponseDTO> getBlog(@PathVariable Integer id) {
+        return new ResponseEntity<>(blogService.getBlogById(id), HttpStatus.OK);
     }
 
     @PostMapping("/create/blog")

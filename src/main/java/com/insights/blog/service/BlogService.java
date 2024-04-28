@@ -27,7 +27,7 @@ public class BlogService {
         int pageSize = 5; // Number of posts per page
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        if(query.equals("")) {
+        if(query.isEmpty()) {
             Page<Blog> blogPage = blogRepository.findAll(pageable);
 
             // Map Blog objects to PostResponseDTO objects
@@ -121,5 +121,11 @@ public class BlogService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete blog", e);
         }
+    }
+
+    public BlogResponseDTO getBlogById(Integer id) {
+        Blog blog = blogRepository.findById(id).orElseThrow();
+        UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 }
