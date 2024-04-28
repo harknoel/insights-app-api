@@ -126,6 +126,6 @@ public class BlogService {
     public BlogResponseDTO getBlogById(Integer id) {
         Blog blog = blogRepository.findById(id).orElseThrow();
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 }
