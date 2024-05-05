@@ -36,8 +36,9 @@ public class BlogController {
 
     @GetMapping("/get/blog/user")
     @PreAuthorize("hasRole('USER')")
-    public List<Blog> getBlog(@CurrentUser User currentUser) {
-        return blogService.getBlogsByUser(currentUser);
+    public ResponseEntity<Page<BlogResponseDTO>> getBlog(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String query, @CurrentUser User currentUser) {
+        Page<BlogResponseDTO> postPage = blogService.getBlogsByUser(page, query, currentUser);
+        return new ResponseEntity<>(postPage, HttpStatus.OK);
     }
 
     @PostMapping("/create/blog")

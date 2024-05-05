@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
     Page<Blog> findBlogsByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String title, String content, Pageable pageable);
-    List<Blog> findBlogsByUser(User user);
+    Page<Blog> findBlogsByUser(User user, Pageable pageable);
+    Page<Blog> findBlogsByUserAndTitleContainingIgnoreCaseOrContentContainingIgnoreCase(User user, String title, String content, Pageable pageable);
 }

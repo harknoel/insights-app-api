@@ -130,7 +130,14 @@ public class BlogService {
         return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 
-    public List<Blog> getBlogsByUser(User user) {
-        return blogRepository.findBlogsByUser(user);
+    public Page<BlogResponseDTO> getBlogsByUser(int page, String query, User user) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        if (query.isEmpty()) {
+            Page<Blog> blogPage = blogRepository.findBlogsByUser(user, pageable);
+            return blogPage.map(this::buildPostResponseDTO);
+        }
+        Page<Blog> blogPage = blogRepository.findBlogsByUserAndTitleContainingIgnoreCaseOrContentContainingIgnoreCase(user, query, query, pageable);
+        return blogPage.map(this::buildPostResponseDTO);
     }
 }
