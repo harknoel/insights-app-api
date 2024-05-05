@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,7 +28,7 @@ public class BlogService {
         int pageSize = 5; // Number of posts per page
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        if(query.isEmpty()) {
+        if (query.isEmpty()) {
             Page<Blog> blogPage = blogRepository.findAll(pageable);
 
             // Map Blog objects to PostResponseDTO objects
@@ -127,5 +128,9 @@ public class BlogService {
         Blog blog = blogRepository.findById(id).orElseThrow();
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
         return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+    }
+
+    public List<Blog> getBlogsByUser(User user) {
+        return blogRepository.findBlogsByUser(user);
     }
 }

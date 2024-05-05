@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/posts")
 @AllArgsConstructor
@@ -30,6 +32,12 @@ public class BlogController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BlogResponseDTO> getBlog(@PathVariable Integer id) {
         return new ResponseEntity<>(blogService.getBlogById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/get/blog/user")
+    @PreAuthorize("hasRole('USER')")
+    public List<Blog> getBlog(@CurrentUser User currentUser) {
+        return blogService.getBlogsByUser(currentUser);
     }
 
     @PostMapping("/create/blog")
