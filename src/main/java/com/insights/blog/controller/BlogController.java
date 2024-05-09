@@ -1,6 +1,5 @@
 package com.insights.blog.controller;
 
-import com.insights.blog.model.Blog;
 import com.insights.blog.model.User;
 import com.insights.blog.payload.BlogRequestDTO;
 import com.insights.blog.payload.BlogResponseDTO;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")

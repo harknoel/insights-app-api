@@ -7,6 +7,7 @@ import com.insights.blog.exception.UnauthorizedActionException;
 import com.insights.blog.payload.BlogRequestDTO;
 import com.insights.blog.payload.BlogResponseDTO;
 import com.insights.blog.payload.UserDTO;
+import com.insights.blog.payload.UserWithEmailDTO;
 import com.insights.blog.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -126,7 +127,7 @@ public class BlogService {
 
     public BlogResponseDTO getBlogById(Integer id) {
         Blog blog = blogRepository.findById(id).orElseThrow();
-        UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
+        UserWithEmailDTO user = new UserWithEmailDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname(), blog.getUser().getEmail());
         return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 
