@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,58 +67,35 @@ public class BlogService {
         return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 
-    public boolean deleteBlog(Integer id, User currentUser) {
+    public boolean deleteBlog(Integer id) {
         try {
             Optional<Blog> optionalBlog = blogRepository.findById(id);
-
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(id);
             }
-
-            Blog blog = optionalBlog.get();
-
-            int blogUserId = blog.getUser().getUserId();
-            int currentUserId = currentUser.getUserId();
-
-            if (blogUserId == currentUserId) {
-                blogRepository.deleteById(id);
-                return true;
-            } else {
-                throw new UnauthorizedActionException("You are not authorized to delete this blog");
-            }
+            blogRepository.deleteById(id);
+            return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public BlogResponseDTO updateBlog(Integer id, BlogRequestDTO blogRequestDTO, User currentUser) {
+    public BlogResponseDTO updateBlog(Integer id, BlogRequestDTO blogRequestDTO) {
         try {
             Optional<Blog> optionalBlog = blogRepository.findById(id);
-
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(id);
             }
-
             Blog blog = optionalBlog.get();
-
-            int blogUserId = blog.getUser().getUserId();
-            int currentUserId = currentUser.getUserId();
-
-            if (blogUserId == currentUserId) {
-                if (blogRequestDTO.getTitle() != null) {
-                    blog.setTitle(blogRequestDTO.getTitle());
-                }
-                if (blogRequestDTO.getContent() != null) {
-                    blog.setContent(blogRequestDTO.getContent());
-                }
-
-                blogRepository.save(blog);
-
-                UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-                return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
-            } else {
-                throw new UnauthorizedActionException("You are not authorized to delete this blog");
+            if (blogRequestDTO.getTitle() != null) {
+                blog.setTitle(blogRequestDTO.getTitle());
             }
+            if (blogRequestDTO.getContent() != null) {
+                blog.setContent(blogRequestDTO.getContent());
+            }
+            blogRepository.save(blog);
+            UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
+            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete blog", e);
         }

@@ -46,13 +46,13 @@ public class BlogController {
 
     @DeleteMapping("/delete/blog/{id}")
     @PreAuthorize("hasRole('USER')")
-    public boolean deleteBlog(@PathVariable Integer id, @CurrentUser User currentUser) {
-        return blogService.deleteBlog(id, currentUser);
+    public boolean deleteBlog(@PathVariable Integer id) {
+        return blogService.deleteBlog(id);
     }
 
     @PutMapping("/update/blog/{id}")
     @PreAuthorize("hasRole('USER')")
-    public BlogResponseDTO updateBlog(@PathVariable Integer id, @RequestBody BlogRequestDTO blogRequestDTO, @CurrentUser User currentUser) {
-        return blogService.updateBlog(id, blogRequestDTO, currentUser);
+    public BlogResponseDTO updateBlog(@PathVariable Integer id, @RequestBody BlogRequestDTO blogRequestDTO) {
+        return blogService.updateBlog(id, blogRequestDTO);
     }
 }
