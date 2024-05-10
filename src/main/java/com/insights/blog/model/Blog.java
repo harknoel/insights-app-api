@@ -41,7 +41,8 @@ public class Blog {
 
     private String title;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
+//    @Column(columnDefinition = "MEDIUMTEXT")
+    @Column(length=6969)
     private String content;
 
     @CreatedDate
