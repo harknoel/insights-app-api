@@ -25,17 +25,9 @@ public class Image {
     private UUID imageId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonManagedReference
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "blog_id")
     @JsonManagedReference
     private Blog blog;
-
-//    @Column(name = "name_image")
-//    private String name;
 
     @Column(name = "url_image")
     private String imageURL;

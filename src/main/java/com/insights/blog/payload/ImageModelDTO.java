@@ -17,5 +17,4 @@ public class ImageModelDTO {
 
     private MultipartFile imageFile;
 
-    private UserDTO user;
 }

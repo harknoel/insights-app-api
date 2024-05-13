@@ -20,9 +20,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ResponseEntity<Map> uploadImage(ImageModelDTO imageModelDTO) {
         try{
-//            if(imageModelDTO.getName().isEmpty()){
-//                return ResponseEntity.badRequest().build();
-//            }
+
             if(imageModelDTO.getImageFile().isEmpty()){
                 return ResponseEntity.badRequest().build();
             }
