@@ -44,6 +44,7 @@ public class BlogService {
     private BlogResponseDTO buildPostResponseDTO(Blog blog) {
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
 
+
         return BlogResponseDTO.builder()
                 .blogId(blog.getBlogId())
                 .title(blog.getTitle())

@@ -24,5 +24,7 @@ public class BlogResponseDTO {
 
     private LocalDateTime updatedAt;
 
+
+
     private UserDTO user;
 }
