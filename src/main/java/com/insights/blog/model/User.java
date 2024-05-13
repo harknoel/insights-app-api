@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,6 +50,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @JsonBackReference
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private List<Notification> notifications;
 
     @OneToMany(mappedBy = "user")
     @JsonBackReference
