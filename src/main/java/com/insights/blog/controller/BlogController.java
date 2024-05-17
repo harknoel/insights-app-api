@@ -1,21 +1,36 @@
 package com.insights.blog.controller;
 
+import com.insights.blog.model.Image;
 import com.insights.blog.model.User;
 import com.insights.blog.payload.BlogRequestDTO;
 import com.insights.blog.payload.BlogResponseDTO;
+import com.insights.blog.payload.ImageModelDTO;
+import com.insights.blog.repository.ImageRepository;
 import com.insights.blog.security.CurrentUser;
 import com.insights.blog.service.BlogService;
+import com.insights.blog.service.cloud.ImageService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
 @AllArgsConstructor
 public class BlogController {
+
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private ImageService imageService;
 
     private final BlogService blogService;
 
@@ -40,8 +55,19 @@ public class BlogController {
 
     @PostMapping("/create/blog")
     @PreAuthorize("hasRole('USER')")
-    public BlogResponseDTO createBlog(@RequestBody BlogRequestDTO blogRequestDTO, @CurrentUser User currentUser) {
-        return blogService.addBlog(blogRequestDTO, currentUser);
+    public BlogResponseDTO createBlog(
+            @RequestPart("blog") BlogRequestDTO blogRequestDTO,
+            @CurrentUser User currentUser,
+            @RequestPart("image") MultipartFile imageFile) {
+
+        ImageModelDTO imageModelDTO = new ImageModelDTO();
+        imageModelDTO.setImageFile(imageFile);
+
+//        // First upload the image
+//        imageService.uploadImage(imageModelDTO);
+
+        // Then add the blog
+        return blogService.addBlog(blogRequestDTO, currentUser, imageModelDTO);
     }
 
     @DeleteMapping("/delete/blog/{id}")

@@ -35,13 +35,19 @@ public class Blog {
     @JsonBackReference
     List<Comment> comments;
 
+    // Added for images
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Image> images;
+
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     List<Like> likes;
 
     private String title;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
+//    @Column(columnDefinition = "MEDIUMTEXT")
+    @Column(length=6969)
     private String content;
 
     @CreatedDate
