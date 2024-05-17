@@ -35,10 +35,10 @@ public class Blog {
     @JsonBackReference
     List<Comment> comments;
 
-    //added images for blogs
+    // Added for images
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    List<Image> images;
+    @JsonManagedReference
+    private List<Image> images;
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference

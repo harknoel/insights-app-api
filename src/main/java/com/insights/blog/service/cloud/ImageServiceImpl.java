@@ -26,7 +26,7 @@ public class ImageServiceImpl implements ImageService {
             }
             Image image = new Image();
 //            image.setName(imageModelDTO.getName());
-            image.setImageURL(cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "folder_1"));
+            image.setImageURL(cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "blog_images"));
             if(image.getImageURL()==null){
                 return ResponseEntity.badRequest().build();
             }
