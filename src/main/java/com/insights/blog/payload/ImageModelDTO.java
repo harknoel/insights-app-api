@@ -1,5 +1,6 @@
 package com.insights.blog.payload;
 
+import com.insights.blog.model.Blog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImageModelDTO {
-    private UUID imageId;
 
     private MultipartFile imageFile;
 
