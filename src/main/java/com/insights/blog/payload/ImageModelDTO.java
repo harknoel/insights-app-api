@@ -1,6 +1,7 @@
 package com.insights.blog.payload;
 
 import com.insights.blog.model.Blog;
+import com.insights.blog.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,7 @@ import java.util.UUID;
 public class ImageModelDTO {
 
     private MultipartFile imageFile;
+
+    private UserDTO userDTO;
 
 }
