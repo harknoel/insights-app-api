@@ -1,23 +1,20 @@
 package com.insights.blog.service;
 
 import com.insights.blog.model.Blog;
-import com.insights.blog.model.Image;
 import com.insights.blog.model.User;
 import com.insights.blog.exception.BlogNotFoundException;
-import com.insights.blog.payload.*;
+import com.insights.blog.exception.UnauthorizedActionException;
+import com.insights.blog.payload.BlogRequestDTO;
+import com.insights.blog.payload.BlogResponseDTO;
+import com.insights.blog.payload.UserDTO;
+import com.insights.blog.payload.UserWithEmailDTO;
 import com.insights.blog.repository.BlogRepository;
-import com.insights.blog.repository.ImageRepository;
-import com.insights.blog.service.cloud.CloudinaryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,12 +22,6 @@ import java.util.Optional;
 public class BlogService {
 
     private final BlogRepository blogRepository;
-
-    @Autowired
-    private final ImageRepository imageRepository;
-
-    @Autowired
-    private final CloudinaryService cloudinaryService;
 
     public Page<BlogResponseDTO> getAllPosts(int page, String query) {
         // Define pagination parameters
@@ -53,7 +44,6 @@ public class BlogService {
     private BlogResponseDTO buildPostResponseDTO(Blog blog) {
         UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
 
-
         return BlogResponseDTO.builder()
                 .blogId(blog.getBlogId())
                 .title(blog.getTitle())
@@ -65,27 +55,16 @@ public class BlogService {
                 .build();
     }
 
-    public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO, User currentUser, ImageModelDTO imageModelDTO) {
-
-        try{
-            var blog = Blog
-                    .builder()
-                    .title(blogRequestDTO.getTitle())
-                    .content(blogRequestDTO.getContent())
-                    .user(currentUser)
-                    .build();
-            blogRepository.save(blog);
-            Image image = new Image();
-            image.setBlog(blog);
-            image.setImageURL(cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "images"));
-            imageRepository.save(image);
-            UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
-
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("Failed to add blog with image(s)");
-        }
+    public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO, User currentUser) {
+        var blog = Blog
+                .builder()
+                .title(blogRequestDTO.getTitle())
+                .content(blogRequestDTO.getContent())
+                .user(currentUser)
+                .build();
+        blogRepository.save(blog);
+        UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
     }
 
     public boolean deleteBlog(Integer id) {
@@ -114,10 +93,6 @@ public class BlogService {
             if (blogRequestDTO.getContent() != null) {
                 blog.setContent(blogRequestDTO.getContent());
             }
-//            if (blogRequestDTO.getImageURLs() != null) {
-////                blog.setContent(blogRequestDTO.getImageURLs());
-//            }
-
             blogRepository.save(blog);
             UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
             return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
