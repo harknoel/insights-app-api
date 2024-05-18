@@ -1,5 +1,6 @@
 package com.insights.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "blog_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Blog blog;
 
     @ManyToOne
