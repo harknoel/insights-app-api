@@ -29,6 +29,14 @@ public class Image {
     @JsonManagedReference
     private Blog blog;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
+    private User user;
+
+
     @Column(name = "url_image")
     private String imageURL;
+
+
 }
