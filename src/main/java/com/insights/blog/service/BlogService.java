@@ -75,15 +75,18 @@ public class BlogService {
                     .user(currentUser)
                     .build();
             blogRepository.save(blog);
-            String imageURL = cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "images");
+            // Handle image if provided
+            if (imageModelDTO != null && imageModelDTO.getImageFile() != null) {
+                String imageURL = cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "blog_images");
 
-            var image = Image
-                    .builder()
-                    .blog(blog)
-                    .user(currentUser)
-                    .imageURL(imageURL)
-                    .build();
-            imageRepository.save(image);
+                var image = Image
+                        .builder()
+                        .blog(blog)
+                        .user(currentUser)
+                        .imageURL(imageURL)
+                        .build();
+                imageRepository.save(image);
+            }
             UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
             return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
 
