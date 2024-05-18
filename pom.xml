@@ -86,7 +86,11 @@
 			<artifactId>cloudinary-taglib</artifactId>
 			<version>1.36.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.corundumstudio.socketio</groupId>
+			<artifactId>netty-socketio</artifactId>
+			<version>1.7.18</version>
+		</dependency>
 	</dependencies>
 
 	<build>

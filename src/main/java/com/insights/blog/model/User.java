@@ -54,6 +54,14 @@ public class User implements UserDetails {
     @JsonBackReference
     private List<Like> likes;
 
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private List<Follow> follows;
+
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private List<Notification> notifications;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
