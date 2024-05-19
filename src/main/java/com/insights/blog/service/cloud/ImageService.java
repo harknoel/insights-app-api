@@ -15,4 +15,10 @@ public interface ImageService {
 
     public List<Image> getImagesByBlogId(Integer blogId);
 
+    public List<Image> findImagesByBlogId(Integer blogId);
+
+//    public void deleteImagesByBlogId(Integer blogId);
+
+    public List<String> deleteImagesByBlogId(Integer blogId);
 }
+

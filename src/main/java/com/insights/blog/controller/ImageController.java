@@ -39,4 +39,16 @@ public class ImageController {
         List<Image> imageList = imageService.getImagesByBlogId(blogId);
         return ResponseEntity.ok(imageList);
     }
+
+//    @DeleteMapping("/delete/{blogId}")
+//    public ResponseEntity<List<Image>> deleteImageByBlogId(@PathVariable Integer blogId){
+//        imageService.deleteImagesByBlogId(blogId);
+//        return ResponseEntity.ok(imageService.getImagesByBlogId(blogId));
+//    }
+
+    @DeleteMapping("/delete/{blogId}")
+    public ResponseEntity<List<String>> deleteImageByBlogId(@PathVariable Integer blogId) {
+        List<String> deletedImageURLs = imageService.deleteImagesByBlogId(blogId);
+        return ResponseEntity.ok(deletedImageURLs);
+    }
 }

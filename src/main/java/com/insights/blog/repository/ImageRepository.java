@@ -12,4 +12,10 @@ import java.util.UUID;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     List<Image> findByBlog_BlogId(Integer blogId);
+
+    List<Image> findImagesByBlog_BlogId(Integer blogId);
+
+    void deleteImageByBlog_BlogId(Integer blogId);
+
+
 }
