@@ -2,14 +2,15 @@ package com.insights.blog.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@Data
 public class SocketIOService {
 
     private final SocketIOServer socketIOServer;
@@ -29,17 +30,12 @@ public class SocketIOService {
         clients.remove(client.getSessionId());
     }
 
-    public void sendNotification(String eventName, Object data, UUID clientId) {
-        SocketIOClient client = clients.get(clientId);
+    public void sendNotification(String event, Object data, UUID socketId) {
+        SocketIOClient client = clients.get(socketId);
         if (client != null) {
-            client.sendEvent(eventName, data);
-        }
-    }
-
-    public void broadcastNotification(String eventName, Object data) {
-        Collection<SocketIOClient> clientsCollection = clients.values();
-        for (SocketIOClient client : clientsCollection) {
-            client.sendEvent(eventName, data);
+            client.sendEvent(event, data);
+        } else {
+            System.out.println("Client not connected: " + socketId);
         }
     }
 }

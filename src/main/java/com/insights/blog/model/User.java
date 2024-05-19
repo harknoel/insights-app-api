@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -33,6 +34,8 @@ public class User implements UserDetails {
     private String email;
 
     private String password;
+
+    private UUID socketId;
 
     @Enumerated(EnumType.STRING)
     @JsonManagedReference

@@ -57,17 +57,18 @@ public class BlogController {
     @PreAuthorize("hasRole('USER')")
     public BlogResponseDTO createBlog(
             @RequestPart("blog") BlogRequestDTO blogRequestDTO,
-            @CurrentUser User currentUser,
-            @RequestPart("image") MultipartFile imageFile) {
+            @CurrentUser User currentUser)
+//            @RequestPart("image") MultipartFile imageFile)
+    {
 
-        ImageModelDTO imageModelDTO = new ImageModelDTO();
-        imageModelDTO.setImageFile(imageFile);
+//        ImageModelDTO imageModelDTO = new ImageModelDTO();
+//        imageModelDTO.setImageFile(imageFile);
 
 //        // First upload the image
 //        imageService.uploadImage(imageModelDTO);
 
         // Then add the blog
-        return blogService.addBlog(blogRequestDTO, currentUser, imageModelDTO);
+        return blogService.addBlog(blogRequestDTO, currentUser);
     }
 
     @DeleteMapping("/delete/blog/{id}")

@@ -7,13 +7,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SocketIOConfig {
 
-    private static final com.corundumstudio.socketio.Configuration CONFIG = new com.corundumstudio.socketio.Configuration();
-
     @Bean
     public SocketIOServer socketIOServer() {
-        CONFIG.setHostname("localhost");
-        CONFIG.setPort(9092);
+        com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
+        config.setHostname("localhost");
+        config.setPort(9092);
 
-        return new SocketIOServer(CONFIG);
+        return new SocketIOServer(config);
     }
 }
