@@ -1,5 +1,5 @@
 package com.insights.blog.model;
 
 public enum NotificationType {
-    BLOG_POST, COMMENT, LIKE
+    BLOG_POST
 }

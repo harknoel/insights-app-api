@@ -40,7 +40,6 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "blog_id")
-    @JsonManagedReference
     private Blog blog;
 
     @CreatedDate
