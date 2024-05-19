@@ -35,8 +35,6 @@ public class User implements UserDetails {
 
     private String password;
 
-    private UUID socketId;
-
     @Enumerated(EnumType.STRING)
     @JsonManagedReference
     private Role role;
