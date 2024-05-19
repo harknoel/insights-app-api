@@ -1,39 +1,26 @@
 package com.insights.blog.service;
 
-import com.insights.blog.exception.UserAndBlogNotFoundException;
 import com.insights.blog.model.Blog;
 import com.insights.blog.model.Like;
 import com.insights.blog.model.User;
 import com.insights.blog.repository.BlogRepository;
 import com.insights.blog.repository.LikeRepository;
-import com.insights.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class LikeService {
 
     private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
     private final BlogRepository blogRepository;
 
     public boolean userHasLikePost(User user, Blog blog) {
         return likeRepository.existsByUserAndBlog(user, blog);
     }
 
-    public boolean likeBlog(Integer userId, Integer blogId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        Optional<Blog> blogOptional = blogRepository.findById(blogId);
-
-        if (userOptional.isEmpty() && blogOptional.isEmpty()) {
-            throw new UserAndBlogNotFoundException(userId, blogId);
-        }
-
-        User user = userOptional.get();
-        Blog blog = blogOptional.get();
+    public int toggleLikeBlog(User user, Integer blogId) {
+        Blog blog = blogRepository.findById(blogId).orElseThrow();
 
         if (!userHasLikePost(user, blog)) {
             var like = Like.builder()
@@ -41,9 +28,15 @@ public class LikeService {
                     .blog(blog)
                     .build();
             likeRepository.save(like);
-            return true;
+        } else {
+            Like like = likeRepository.findByUserAndBlog(user, blog);
+            likeRepository.delete(like);
         }
+        return blog.getLikes().size();
+    }
 
-        return false;
+    public boolean checkUserLike(User user, int blogId) {
+        Blog blog = blogRepository.findById(blogId).orElseThrow();
+        return userHasLikePost(user, blog);
     }
 }

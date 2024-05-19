@@ -1,7 +1,6 @@
 package com.insights.blog.repository;
 
 
-import com.insights.blog.model.Blog;
 import com.insights.blog.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
