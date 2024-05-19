@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -44,5 +46,20 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<Image> getImagesByBlogId(Integer blogId) {
         return imageRepository.findByBlog_BlogId(blogId);
+    }
+
+    @Override
+    public List<Image> findImagesByBlogId(Integer blogId) {
+        return imageRepository.findImagesByBlog_BlogId(blogId);
+    }
+
+    @Override
+    public List<String> deleteImagesByBlogId(Integer blogId) {
+        List<Image> imagesToDelete = imageRepository.findByBlog_BlogId(blogId);
+        List<String> deletedImageURLs = imagesToDelete.stream()
+                .map(Image::getImageURL)
+                .collect(Collectors.toList());
+        imageRepository.deleteAll(imagesToDelete);
+        return deletedImageURLs;
     }
 }
