@@ -2,6 +2,7 @@ package com.insights.blog.service;
 
 import com.insights.blog.model.Blog;
 import com.insights.blog.model.Image;
+import com.insights.blog.model.NotificationType;
 import com.insights.blog.model.User;
 import com.insights.blog.exception.BlogNotFoundException;
 import com.insights.blog.payload.*;
@@ -31,6 +32,9 @@ public class BlogService {
 
     @Autowired
     private final CloudinaryService cloudinaryService;
+
+    @Autowired
+    private final NotificationService notificationService;
 
     public Page<BlogResponseDTO> getAllPosts(int page, String query) {
         // Define pagination parameters
@@ -88,6 +92,9 @@ public class BlogService {
                         .build();
                 imageRepository.save(image);
             }
+
+            notificationService.notifyFollowers(currentUser, blog, NotificationType.BLOG_POST);
+
             UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
             return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
 
