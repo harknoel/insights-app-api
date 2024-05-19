@@ -20,4 +20,6 @@ public class CommentResponseDTO {
     private LocalDateTime updatedAt;
 
     private UserWithEmailDTO user;
+
+    private int commentId;
 }
