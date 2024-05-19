@@ -82,4 +82,6 @@ public class BlogController {
     public BlogResponseDTO updateBlog(@PathVariable Integer id, @RequestBody BlogRequestDTO blogRequestDTO) {
         return blogService.updateBlog(id, blogRequestDTO);
     }
+
+
 }
