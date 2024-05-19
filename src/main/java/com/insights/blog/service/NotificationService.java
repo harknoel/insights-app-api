@@ -8,6 +8,7 @@ import com.insights.blog.repository.NotificationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +62,7 @@ public class NotificationService {
             Integer blogId = blog.getBlogId();
             String title = blog.getTitle();
             User author = notification.getFrom();
+            LocalDateTime localDateTime = notification.getCreatedAt();
             UserDTO userDTO = UserDTO.builder()
                     .userId(author.getUserId())
                     .firstname(author.getFirstname())
@@ -70,6 +72,7 @@ public class NotificationService {
             NotificationResponseDTO notificationDTO = NotificationResponseDTO.builder()
                     .blogId(blogId)
                     .title(title)
+                    .createdAt(localDateTime)
                     .author(userDTO)
                     .build();
 
