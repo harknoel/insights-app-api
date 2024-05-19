@@ -1,15 +1,16 @@
 package com.insights.blog.controller;
 
+import com.insights.blog.model.Blog;
+import com.insights.blog.model.Image;
 import com.insights.blog.payload.ImageModelDTO;
 import com.insights.blog.repository.ImageRepository;
 import com.insights.blog.service.cloud.ImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,4 +33,17 @@ public class ImageController {
             return null;
         }
     }
+
+    @GetMapping("/get/{blogId}")
+    public ResponseEntity<List<Image>> getImageByBlogId(@PathVariable Integer blogId){
+        List<Image> imageList = imageService.getImagesByBlogId(blogId);
+        return ResponseEntity.ok(imageList);
+    }
+
+    @DeleteMapping("/delete/{blogId}")
+    public ResponseEntity<List<String>> deleteImageByBlogId(@PathVariable Integer blogId) {
+        List<String> deletedImageURLs = imageService.deleteImagesByBlogId(blogId);
+        return ResponseEntity.ok(deletedImageURLs);
+    }
+
 }
