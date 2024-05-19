@@ -17,4 +17,9 @@ public class LikeController {
     public int like(@PathVariable int id, @CurrentUser User user) {
         return likeService.toggleLikeBlog(user, id);
     }
+
+    @GetMapping("/user/blog/{id}")
+    public boolean checkUserLike(@PathVariable int id, @CurrentUser User user) {
+        return likeService.checkUserLike(user, id);
+    }
 }

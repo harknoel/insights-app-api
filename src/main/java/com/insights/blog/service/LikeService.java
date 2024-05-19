@@ -34,4 +34,9 @@ public class LikeService {
         }
         return blog.getLikes().size();
     }
+
+    public boolean checkUserLike(User user, int blogId) {
+        Blog blog = blogRepository.findById(blogId).orElseThrow();
+        return userHasLikePost(user, blog);
+    }
 }
