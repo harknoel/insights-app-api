@@ -19,7 +19,7 @@ public class LikeService {
         return likeRepository.existsByUserAndBlog(user, blog);
     }
 
-    public boolean likeBlog(User user, Integer blogId) {
+    public int toggleLikeBlog(User user, Integer blogId) {
         Blog blog = blogRepository.findById(blogId).orElseThrow();
 
         if (!userHasLikePost(user, blog)) {
@@ -28,8 +28,10 @@ public class LikeService {
                     .blog(blog)
                     .build();
             likeRepository.save(like);
-            return true;
+        } else {
+            Like like = likeRepository.findByUserAndBlog(user, blog);
+            likeRepository.delete(like);
         }
-        return false;
+        return blog.getLikes().size();
     }
 }
