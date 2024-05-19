@@ -1,6 +1,7 @@
 package com.insights.blog.repository;
 
 
+import com.insights.blog.model.Blog;
 import com.insights.blog.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,4 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     List<Image> findImagesByBlog_BlogId(Integer blogId);
 
     void deleteImageByBlog_BlogId(Integer blogId);
-
-
 }
