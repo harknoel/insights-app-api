@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
 @Service
 public class ImageServiceImpl implements ImageService {
     @Autowired
@@ -51,12 +52,6 @@ public class ImageServiceImpl implements ImageService {
     public List<Image> findImagesByBlogId(Integer blogId) {
         return imageRepository.findImagesByBlog_BlogId(blogId);
     }
-
-//    @Override
-//    public void deleteImagesByBlogId(Integer blogId) {
-//        imageRepository.deleteImageByBlog_BlogId(blogId);
-//    }
-
 
     @Override
     public List<String> deleteImagesByBlogId(Integer blogId) {

@@ -16,6 +16,4 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     List<Image> findImagesByBlog_BlogId(Integer blogId);
 
     void deleteImageByBlog_BlogId(Integer blogId);
-
-
 }

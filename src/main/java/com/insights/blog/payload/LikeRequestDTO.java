@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LikeRequestDTO {
-    private Integer userId;
     private Integer blogId;
 }
