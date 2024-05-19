@@ -4,10 +4,7 @@ import com.insights.blog.model.User;
 import com.insights.blog.security.CurrentUser;
 import com.insights.blog.service.FollowService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/follows")
@@ -24,5 +21,15 @@ public class FollowController {
     @PostMapping("/unfollow/{userId}")
     public boolean unfollowUserById(@PathVariable Integer userId, @CurrentUser User currentUser) {
         return followService.unfollowUserById(userId, currentUser);
+    }
+
+    @GetMapping("/following/{userId}")
+    public boolean isUserFollowing(@PathVariable Integer userId,@CurrentUser User currentUser) {
+        return followService.checkFollow(userId, currentUser) != null;
+    }
+
+    @PostMapping("/toggle/follow/{userId}")
+    public void toggleFollow(@PathVariable Integer userId, @CurrentUser User currentUser) {
+        followService.toggleFollow(userId, currentUser);
     }
 }

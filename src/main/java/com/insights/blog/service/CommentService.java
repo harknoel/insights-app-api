@@ -142,6 +142,7 @@ public class CommentService {
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .user(user)
+                .commentId(comment.getCommentId())
                 .build();
     }
 }

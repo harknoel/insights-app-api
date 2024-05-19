@@ -1,6 +1,5 @@
 package com.insights.blog.service;
 
-import com.insights.blog.exception.UserNotFoundException;
 import com.insights.blog.model.Follow;
 import com.insights.blog.model.User;
 import com.insights.blog.repository.FollowRepository;
@@ -22,12 +21,7 @@ public class FollowService {
     private final UserRepository userRepository;
 
     public boolean followUserById(Integer userId, User currentUser) {
-        User targetUser = findUserById(userId);
-
-        Follow follow = checkFollow(targetUser, currentUser);
-
-        if(follow != null)
-            return false;
+        User targetUser = userRepository.findById(userId).orElseThrow();
 
         Follow newFollow = Follow.builder()
                 .user(currentUser)
@@ -39,26 +33,30 @@ public class FollowService {
     }
 
     public boolean unfollowUserById(Integer userId, User currentUser) {
-        User targetUser = findUserById(userId);
-
-        Follow follow = checkFollow(targetUser, currentUser);
-
-        if(follow == null)
-            return false;
-
+        Follow follow = checkFollow(userId, currentUser);
         followRepository.delete(follow);
-
         return true;
-}
+    }
 
     public User findUserById(Integer userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.orElse(null);
     }
 
-    public Follow checkFollow(User targetUser, User currentUser) {
-        Optional<Follow> follow = followRepository.findByUserAndTargetUser(currentUser, targetUser);
+    public Follow checkFollow(int targetUserId, User currentUser) {
+        User targetUser = findUserById(targetUserId);
+        return followRepository.findByUserAndTargetUser(currentUser, targetUser).orElse(null);
+    }
 
-        return follow.orElse(null);
+    public void toggleFollow(Integer userId, User currentUser) {
+        if (userId.equals(currentUser.getUserId())) {
+            return;
+        }
+        Follow follow = checkFollow(userId, currentUser);
+        if (follow == null) {
+            followUserById(userId, currentUser);
+        } else {
+            unfollowUserById(userId, currentUser);
+        }
     }
 }
