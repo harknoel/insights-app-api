@@ -62,12 +62,13 @@ public class BlogService {
                 .createdAt(blog.getCreatedAt())
                 .updatedAt(blog.getUpdatedAt())
                 .user(user)
+                .images(blog.getImages())
                 .build();
     }
 
     public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO, User currentUser, ImageModelDTO imageModelDTO) {
 
-        try{
+        try {
             var blog = Blog
                     .builder()
                     .title(blogRequestDTO.getTitle())
@@ -88,9 +89,9 @@ public class BlogService {
                 imageRepository.save(image);
             }
             UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to add blog with image(s)");
         }
@@ -128,7 +129,7 @@ public class BlogService {
 
             blogRepository.save(blog);
             UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete blog", e);
         }
@@ -137,7 +138,7 @@ public class BlogService {
     public BlogResponseDTO getBlogById(Integer id) {
         Blog blog = blogRepository.findById(id).orElseThrow();
         UserWithEmailDTO user = new UserWithEmailDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname(), blog.getUser().getEmail());
-        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
     }
 
     public Page<BlogResponseDTO> getBlogsByUser(int page, String query, User user) {

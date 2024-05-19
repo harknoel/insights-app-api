@@ -28,5 +28,5 @@ public class BlogResponseDTO {
 
     private UserDTO user;
 
-
+    private List<Image> images;
 }
