@@ -81,4 +81,21 @@ public class NotificationService {
 
         return notificationResponseDTOS;
     }
+
+    public int readNotifications(User currentUser) {
+        Optional<List<Notification>> optionalNotifications = notificationRepository.findByUser(currentUser);
+
+        if (optionalNotifications.isEmpty()) {
+            return -1;
+        }
+
+        List<Notification> notifications = optionalNotifications.get();
+
+        for(Notification notification : notifications) {
+            notification.setIsRead(Boolean.TRUE);
+            notificationRepository.save(notification);
+        }
+
+        return 1;
+    }
 }
