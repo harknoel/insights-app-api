@@ -32,4 +32,9 @@ public class NotificationController {
         List<NotificationResponseDTO> notifications = notificationService.allNotifications(currentUser);
         return ResponseEntity.ok(notifications);
     }
+
+    @GetMapping("/read")
+    public int readNotifications(@CurrentUser User currentUser) {
+        return notificationService.readNotifications(currentUser);
+    }
 }
