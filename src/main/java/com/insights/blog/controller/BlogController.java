@@ -79,8 +79,19 @@ public class BlogController {
 
     @PutMapping("/update/blog/{id}")
     @PreAuthorize("hasRole('USER')")
-    public BlogResponseDTO updateBlog(@PathVariable Integer id, @RequestBody BlogRequestDTO blogRequestDTO) {
-        return blogService.updateBlog(id, blogRequestDTO);
+    public BlogResponseDTO updateBlog(@PathVariable Integer id, @RequestBody BlogRequestDTO blogRequestDTO, @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+
+        ImageModelDTO imageModelDTO = new ImageModelDTO();
+        imageModelDTO.setImageFile(imageFile);
+        System.out.println("Received create blog request with following details:");
+        System.out.println("Blog Request DTO: " + blogRequestDTO);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            System.out.println("Image file update received: " + imageFile.getOriginalFilename());
+        } else {
+            System.out.println("No image file update received");
+        }
+
+        return blogService.updateBlog(id, blogRequestDTO, imageModelDTO);
     }
 
 

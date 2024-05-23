@@ -5,13 +5,11 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class BlogNotFoundException extends RuntimeException {
-
+public class ImageNotFoundException extends RuntimeException{
     private final int blogId;
 
-    public BlogNotFoundException(int blogId) {
-        super("Blog with ID " + blogId + " not found");
+    public ImageNotFoundException(int blogId){
+        super("Image with blogId" + blogId + "not found");
         this.blogId = blogId;
     }
-
 }

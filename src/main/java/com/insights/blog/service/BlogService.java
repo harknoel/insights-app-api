@@ -1,5 +1,6 @@
 package com.insights.blog.service;
 
+import com.insights.blog.exception.ImageNotFoundException;
 import com.insights.blog.model.Blog;
 import com.insights.blog.model.Image;
 import com.insights.blog.model.NotificationType;
@@ -116,8 +117,20 @@ public class BlogService {
             return false;
         }
     }
+    public boolean deleteImage(Integer id){
+        try{
+            List<Image> optionalImage = imageRepository.findByBlog_BlogId(id);
+            if(optionalImage.isEmpty()){
+                throw new ImageNotFoundException(id);
+            }
+            imageRepository.deleteImageByBlog_BlogId(id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 
-    public BlogResponseDTO updateBlog(Integer id, BlogRequestDTO blogRequestDTO) {
+    public BlogResponseDTO updateBlog(Integer id, BlogRequestDTO blogRequestDTO, ImageModelDTO imageModelDTO) {
         try {
             Optional<Blog> optionalBlog = blogRepository.findById(id);
             if (optionalBlog.isEmpty()) {
@@ -130,11 +143,31 @@ public class BlogService {
             if (blogRequestDTO.getContent() != null) {
                 blog.setContent(blogRequestDTO.getContent());
             }
-//            if (blogRequestDTO.getImageURLs() != null) {
-////                blog.setContent(blogRequestDTO.getImageURLs());
+            blogRepository.save(blog);
+//            List<Image> optionalImage = imageRepository.findImagesByBlog_BlogId(id);
+//            if(optionalImage.isEmpty()) {
+//                throw new ImageNotFoundException(id);
+//            }
+//            Image image = optionalImage.get(0);
+//            if(imageModelDTO != null  && imageModelDTO.getImageFile() != null){
+//                System.out.print(image.getImageURL());
 //            }
 
-            blogRepository.save(blog);
+            if(imageModelDTO != null && imageModelDTO.getImageFile() != null){
+                imageRepository.deleteImageByBlog_BlogId(id);
+
+                String imageURL = cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "blog_images");
+
+                // Save new image
+                Image image = Image.builder()
+                        .blog(blog)
+                        .user(blog.getUser())
+                        .imageURL(imageURL)
+                        .build();
+                imageRepository.save(image);
+            }
+
+
             UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
             return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
         } catch (Exception e) {
