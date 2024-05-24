@@ -10,6 +10,7 @@ import com.insights.blog.payload.*;
 import com.insights.blog.repository.BlogRepository;
 import com.insights.blog.repository.ImageRepository;
 import com.insights.blog.service.cloud.CloudinaryService;
+import com.insights.blog.service.cloud.ImageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,8 @@ public class BlogService {
 
     @Autowired
     private final NotificationService notificationService;
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
 
     public Page<BlogResponseDTO> getAllPosts(int page, String query) {
         // Define pagination parameters
@@ -144,18 +147,9 @@ public class BlogService {
                 blog.setContent(blogRequestDTO.getContent());
             }
             blogRepository.save(blog);
-//            List<Image> optionalImage = imageRepository.findImagesByBlog_BlogId(id);
-//            if(optionalImage.isEmpty()) {
-//                throw new ImageNotFoundException(id);
-//            }
-//            Image image = optionalImage.get(0);
-//            if(imageModelDTO != null  && imageModelDTO.getImageFile() != null){
-//                System.out.print(image.getImageURL());
-//            }
 
             if(imageModelDTO != null && imageModelDTO.getImageFile() != null){
-                imageRepository.deleteImageByBlog_BlogId(id);
-
+                imageServiceImpl.deleteImagesByBlogId(id);
                 String imageURL = cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "blog_images");
 
                 // Save new image
