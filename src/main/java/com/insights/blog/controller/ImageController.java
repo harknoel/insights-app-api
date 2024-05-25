@@ -23,6 +23,8 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
+    private final Object lock = new Object(); // Create a lock object
+
     @PostMapping("/upload")
     public ResponseEntity<Map> upload(ImageModelDTO imageModelDTO){
         try{
@@ -36,6 +38,7 @@ public class ImageController {
 
     @GetMapping("/get/{blogId}")
     public ResponseEntity<List<Image>> getImageByBlogId(@PathVariable Integer blogId){
+
         List<Image> imageList = imageService.getImagesByBlogId(blogId);
         return ResponseEntity.ok(imageList);
     }

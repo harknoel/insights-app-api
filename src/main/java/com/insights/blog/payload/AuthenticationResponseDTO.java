@@ -1,14 +1,14 @@
 package com.insights.blog.payload;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class AuthenticationResponseDTO {
+@Getter
+@Setter
+public class AuthenticationResponseDTO extends UserDTO {
     String token;
+
+    public AuthenticationResponseDTO(Integer userId, String firstname, String lastname, String token) {
+        super(userId, firstname, lastname);
+        this.token = token;
+    }
 }

@@ -1,13 +1,16 @@
 package com.insights.blog.service;
 
+import com.insights.blog.exception.ImageNotFoundException;
 import com.insights.blog.model.Blog;
 import com.insights.blog.model.Image;
+import com.insights.blog.model.NotificationType;
 import com.insights.blog.model.User;
 import com.insights.blog.exception.BlogNotFoundException;
 import com.insights.blog.payload.*;
 import com.insights.blog.repository.BlogRepository;
 import com.insights.blog.repository.ImageRepository;
 import com.insights.blog.service.cloud.CloudinaryService;
+import com.insights.blog.service.cloud.ImageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +34,11 @@ public class BlogService {
 
     @Autowired
     private final CloudinaryService cloudinaryService;
+
+    @Autowired
+    private final NotificationService notificationService;
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
 
     public Page<BlogResponseDTO> getAllPosts(int page, String query) {
         // Define pagination parameters
@@ -62,12 +70,13 @@ public class BlogService {
                 .createdAt(blog.getCreatedAt())
                 .updatedAt(blog.getUpdatedAt())
                 .user(user)
+                .images(blog.getImages())
                 .build();
     }
 
     public BlogResponseDTO addBlog(BlogRequestDTO blogRequestDTO, User currentUser, ImageModelDTO imageModelDTO) {
 
-        try{
+        try {
             var blog = Blog
                     .builder()
                     .title(blogRequestDTO.getTitle())
@@ -87,10 +96,13 @@ public class BlogService {
                         .build();
                 imageRepository.save(image);
             }
-            UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
 
-        }catch (Exception e){
+            notificationService.notifyFollowers(currentUser, blog, NotificationType.BLOG_POST);
+
+            UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
+            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), 0, blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
+
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to add blog with image(s)");
         }
@@ -108,8 +120,20 @@ public class BlogService {
             return false;
         }
     }
+    public boolean deleteImage(Integer id){
+        try{
+            List<Image> optionalImage = imageRepository.findByBlog_BlogId(id);
+            if(optionalImage.isEmpty()){
+                throw new ImageNotFoundException(id);
+            }
+            imageRepository.deleteImageByBlog_BlogId(id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 
-    public BlogResponseDTO updateBlog(Integer id, BlogRequestDTO blogRequestDTO) {
+    public BlogResponseDTO updateBlog(Integer id, BlogRequestDTO blogRequestDTO, ImageModelDTO imageModelDTO) {
         try {
             Optional<Blog> optionalBlog = blogRepository.findById(id);
             if (optionalBlog.isEmpty()) {
@@ -122,13 +146,24 @@ public class BlogService {
             if (blogRequestDTO.getContent() != null) {
                 blog.setContent(blogRequestDTO.getContent());
             }
-//            if (blogRequestDTO.getImageURLs() != null) {
-////                blog.setContent(blogRequestDTO.getImageURLs());
-//            }
-
             blogRepository.save(blog);
+
+            if(imageModelDTO != null && imageModelDTO.getImageFile() != null){
+                imageServiceImpl.deleteImagesByBlogId(id);
+                String imageURL = cloudinaryService.uploadFile(imageModelDTO.getImageFile(), "blog_images");
+
+                // Save new image
+                Image image = Image.builder()
+                        .blog(blog)
+                        .user(blog.getUser())
+                        .imageURL(imageURL)
+                        .build();
+                imageRepository.save(image);
+            }
+
+
             UserDTO user = new UserDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname());
-            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+            return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete blog", e);
         }
@@ -137,7 +172,7 @@ public class BlogService {
     public BlogResponseDTO getBlogById(Integer id) {
         Blog blog = blogRepository.findById(id).orElseThrow();
         UserWithEmailDTO user = new UserWithEmailDTO(blog.getUser().getUserId(), blog.getUser().getFirstname(), blog.getUser().getLastname(), blog.getUser().getEmail());
-        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user);
+        return new BlogResponseDTO(blog.getBlogId(), blog.getTitle(), blog.getLikes().size(), blog.getContent(), blog.getCreatedAt(), blog.getUpdatedAt(), user, blog.getImages());
     }
 
     public Page<BlogResponseDTO> getBlogsByUser(int page, String query, User user) {

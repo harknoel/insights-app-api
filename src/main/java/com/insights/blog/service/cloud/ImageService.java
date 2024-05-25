@@ -19,4 +19,3 @@ public interface ImageService {
 
     public List<String> deleteImagesByBlogId(Integer blogId);
 }
-

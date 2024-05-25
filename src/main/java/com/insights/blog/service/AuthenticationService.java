@@ -26,7 +26,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponseDTO register(RegisterRequestDTO request) {
-        if(userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User already exists");
         }
         var user = User.builder()
@@ -39,9 +39,10 @@ public class AuthenticationService {
         var savedUser = userRepository.save(user);
         String jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponseDTO.builder()
-                .token(jwtToken)
-                .build();
+        return new AuthenticationResponseDTO(user.getUserId()
+                , user.getFirstname()
+                , user.getLastname()
+                , jwtToken);
 
     }
 
@@ -57,9 +58,11 @@ public class AuthenticationService {
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponseDTO.builder()
-                .token(jwtToken)
-                .build();
+
+        return new AuthenticationResponseDTO(user.getUserId()
+                , user.getFirstname()
+                , user.getLastname()
+                , jwtToken);
     }
 
     private void saveUserToken(User user, String jwtToken) {
