@@ -9,6 +9,7 @@ import com.insights.blog.repository.ImageRepository;
 import com.insights.blog.security.CurrentUser;
 import com.insights.blog.service.BlogService;
 import com.insights.blog.service.cloud.ImageService;
+import com.insights.blog.service.cloud.ImageServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class BlogController {
     private ImageService imageService;
 
     private final BlogService blogService;
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
 
     @GetMapping("/all")
     public ResponseEntity<Page<BlogResponseDTO>> getAllPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String query) {
@@ -74,14 +77,26 @@ public class BlogController {
     @DeleteMapping("/delete/blog/{id}")
     @PreAuthorize("hasRole('USER')")
     public boolean deleteBlog(@PathVariable Integer id) {
+        imageServiceImpl.deleteImagesByBlogId(id);
         return blogService.deleteBlog(id);
     }
 
     @PutMapping("/update/blog/{id}")
     @PreAuthorize("hasRole('USER')")
-    public BlogResponseDTO updateBlog(@PathVariable Integer id, @RequestBody BlogRequestDTO blogRequestDTO) {
-        return blogService.updateBlog(id, blogRequestDTO);
+    public BlogResponseDTO updateBlog(@PathVariable Integer id, @RequestPart("blog") BlogRequestDTO blogRequestDTO, @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+
+        ImageModelDTO imageModelDTO = new ImageModelDTO();
+        imageModelDTO.setImageFile(imageFile);
+        System.out.println("Received create blog request with following details:");
+        System.out.println("Blog Request DTO: " + blogRequestDTO);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            System.out.println("Image file update received: " + imageFile.getOriginalFilename());
+        } else {
+            System.out.println("No image file update received");
+        }
+
+        return blogService.updateBlog(id, blogRequestDTO, imageModelDTO);
     }
 
-
+//update init
 }

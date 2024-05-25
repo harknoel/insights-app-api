@@ -1,11 +1,15 @@
 package com.insights.blog.service.cloud;
 
+import com.cloudinary.api.ApiResponse;
+import com.cloudinary.utils.ObjectUtils;
+import io.jsonwebtoken.lang.Maps;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.cloudinary.Cloudinary;
 
@@ -29,4 +33,12 @@ public class CloudinaryServiceImp implements CloudinaryService {
             return null;
         }
     }
+
+
+    @Override
+    public ApiResponse deleteResources(List<String> publicIds) throws Exception {
+        return cloudinary.api().deleteResources(publicIds, ObjectUtils.emptyMap());
+
+    }
+
 }
