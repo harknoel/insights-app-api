@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +79,7 @@ public class NotificationService {
 
             notificationResponseDTOS.add(notificationDTO);
         }
-
+        notificationResponseDTOS.sort(Comparator.comparing(NotificationResponseDTO::getCreatedAt).reversed());
         return notificationResponseDTOS;
     }
 
