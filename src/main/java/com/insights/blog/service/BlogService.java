@@ -1,14 +1,12 @@
 package com.insights.blog.service;
 
 import com.insights.blog.exception.ImageNotFoundException;
-import com.insights.blog.model.Blog;
-import com.insights.blog.model.Image;
-import com.insights.blog.model.NotificationType;
-import com.insights.blog.model.User;
+import com.insights.blog.model.*;
 import com.insights.blog.exception.BlogNotFoundException;
 import com.insights.blog.payload.*;
 import com.insights.blog.repository.BlogRepository;
 import com.insights.blog.repository.ImageRepository;
+import com.insights.blog.repository.NotificationRepository;
 import com.insights.blog.service.cloud.CloudinaryService;
 import com.insights.blog.service.cloud.ImageServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +37,8 @@ public class BlogService {
     private final NotificationService notificationService;
     @Autowired
     private ImageServiceImpl imageServiceImpl;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public Page<BlogResponseDTO> getAllPosts(int page, String query) {
         // Define pagination parameters
@@ -114,6 +114,9 @@ public class BlogService {
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(id);
             }
+
+            List<Notification> notifications = notificationRepository.getAllByBlog_BlogId(id);
+            notificationRepository.deleteAll(notifications);
             blogRepository.deleteById(id);
             return true;
         } catch (Exception e) {
