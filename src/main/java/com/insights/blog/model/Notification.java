@@ -1,6 +1,7 @@
 package com.insights.blog.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,7 @@ public class Notification {
     Boolean isRead;
 
     @ManyToOne
+    @Nullable
     @JoinColumn(name = "blog_id")
     private Blog blog;
 

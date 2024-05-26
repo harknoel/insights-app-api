@@ -56,6 +56,16 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    public void notifyFollowTargetUser(User currentUser, User targetUser, NotificationType notificationType) {
+        var notification = Notification.builder()
+                .user(targetUser)
+                .from(currentUser)
+                .notificationType(notificationType)
+                .isRead(Boolean.FALSE)
+                .build();
+        notificationRepository.save(notification);
+    }
+
     public int countNotifications(User currentUser) {
         return notificationRepository.findByUserAndIsReadFalse(currentUser).size();
     }
@@ -72,10 +82,17 @@ public class NotificationService {
 
         for (Notification notification : notifications) {
             Blog blog = notification.getBlog();
-            Integer blogId = blog.getBlogId();
-            String title = blog.getTitle();
+            Integer blogId = null;
+            String title = null;
+            if (blog != null) {
+                blogId = blog.getBlogId();
+                title = blog.getTitle();
+            }
+
             User author = notification.getFrom();
+
             LocalDateTime localDateTime = notification.getCreatedAt();
+
             UserDTO userDTO = UserDTO.builder()
                     .userId(author.getUserId())
                     .firstname(author.getFirstname())

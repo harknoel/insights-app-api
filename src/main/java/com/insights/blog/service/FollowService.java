@@ -1,24 +1,24 @@
 package com.insights.blog.service;
 
 import com.insights.blog.model.Follow;
+import com.insights.blog.model.NotificationType;
 import com.insights.blog.model.User;
 import com.insights.blog.repository.FollowRepository;
 import com.insights.blog.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class FollowService {
 
-    @Autowired
     private final FollowRepository followRepository;
 
-    @Autowired
     private final UserRepository userRepository;
+
+    private NotificationService notificationService;
 
     public boolean followUserById(Integer userId, User currentUser) {
         User targetUser = userRepository.findById(userId).orElseThrow();
@@ -27,6 +27,7 @@ public class FollowService {
                 .user(currentUser)
                 .targetUser(targetUser)
                 .build();
+        notificationService.notifyFollowTargetUser(currentUser,targetUser, NotificationType.FOLLOW_USER);
         followRepository.save(newFollow);
 
         return true;
