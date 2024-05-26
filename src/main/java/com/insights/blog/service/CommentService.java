@@ -5,10 +5,9 @@ import com.insights.blog.exception.CommentNotFoundException;
 import com.insights.blog.exception.UnauthorizedActionException;
 import com.insights.blog.model.Blog;
 import com.insights.blog.model.Comment;
+import com.insights.blog.model.NotificationType;
 import com.insights.blog.model.User;
-import com.insights.blog.payload.BlogResponseDTO;
 import com.insights.blog.payload.CommentResponseDTO;
-import com.insights.blog.payload.UserDTO;
 import com.insights.blog.payload.UserWithEmailDTO;
 import com.insights.blog.repository.CommentRepository;
 import com.insights.blog.repository.BlogRepository;
@@ -25,6 +24,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BlogRepository blogRepository;
+    private final NotificationService notificationService;
 
     public void addComment(Integer blogId, String content, User currentUser) {
         Optional<Blog> optionalBlog = blogRepository.findById(blogId);
@@ -39,6 +39,9 @@ public class CommentService {
                     .comment(content)
                     .build();
             commentRepository.save(comment);
+            if (!currentUser.getUserId().equals(blog.getUser().getUserId())) {
+                notificationService.notifyTargetUser(currentUser, blog, NotificationType.COMMENT_POST);
+            }
         } else {
             throw new BlogNotFoundException(blogId);
         }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,18 @@ public class NotificationService {
         }
     }
 
+    public void notifyTargetUser(User currentUser, Blog blog, NotificationType notificationType) {
+        User targetUser = blog.getUser();
+        var notification = Notification.builder()
+                .user(targetUser)
+                .from(currentUser)
+                .notificationType(notificationType)
+                .isRead(Boolean.FALSE)
+                .blog(blog)
+                .build();
+        notificationRepository.save(notification);
+    }
+
     public int countNotifications(User currentUser) {
         return notificationRepository.findByUserAndIsReadFalse(currentUser).size();
     }
@@ -73,12 +86,13 @@ public class NotificationService {
                     .blogId(blogId)
                     .title(title)
                     .createdAt(localDateTime)
+                    .notificationType(notification.getNotificationType())
                     .author(userDTO)
                     .build();
 
             notificationResponseDTOS.add(notificationDTO);
         }
-
+        notificationResponseDTOS.sort(Comparator.comparing(NotificationResponseDTO::getCreatedAt).reversed());
         return notificationResponseDTOS;
     }
 
@@ -91,7 +105,7 @@ public class NotificationService {
 
         List<Notification> notifications = optionalNotifications.get();
 
-        for(Notification notification : notifications) {
+        for (Notification notification : notifications) {
             notification.setIsRead(Boolean.TRUE);
             notificationRepository.save(notification);
         }
