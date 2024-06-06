@@ -1,14 +1,12 @@
 package com.insights.blog.service;
 
 import com.insights.blog.exception.ImageNotFoundException;
-import com.insights.blog.model.Blog;
-import com.insights.blog.model.Image;
-import com.insights.blog.model.NotificationType;
-import com.insights.blog.model.User;
+import com.insights.blog.model.*;
 import com.insights.blog.exception.BlogNotFoundException;
 import com.insights.blog.payload.*;
 import com.insights.blog.repository.BlogRepository;
 import com.insights.blog.repository.ImageRepository;
+import com.insights.blog.repository.NotificationRepository;
 import com.insights.blog.service.cloud.CloudinaryService;
 import com.insights.blog.service.cloud.ImageServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,11 +38,13 @@ public class BlogService {
     private final NotificationService notificationService;
     @Autowired
     private ImageServiceImpl imageServiceImpl;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public Page<BlogResponseDTO> getAllPosts(int page, String query) {
         // Define pagination parameters
         int pageSize = 5; // Number of posts per page
-        Pageable pageable = PageRequest.of(page, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         if (query.isEmpty()) {
             Page<Blog> blogPage = blogRepository.findAll(pageable);
@@ -114,6 +115,9 @@ public class BlogService {
             if (optionalBlog.isEmpty()) {
                 throw new BlogNotFoundException(id);
             }
+
+            List<Notification> notifications = notificationRepository.getAllByBlog_BlogId(id);
+            notificationRepository.deleteAll(notifications);
             blogRepository.deleteById(id);
             return true;
         } catch (Exception e) {
