@@ -11,9 +11,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-  jmx:
-    server:
-      port=${PORT:8080}:
+#  jmx:
+#    server:
+#      port=${PORT:8080}:
 #test
   cloudinary:
     cloud-name: ${CLOUDINARY_CLOUD_NAME}
